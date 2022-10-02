@@ -10,13 +10,15 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @ToString
 @Table(indexes = {
         @Index(columnList = "title"),
-        @Index(columnList = "title"),
+        @Index(columnList = "content"),
         @Index(columnList = "hashtag"),
         @Index(columnList = "createBy"),
 })
@@ -32,9 +34,13 @@ public class Article {
     @Setter
     @Column(nullable = false, length = 10000)
     private String content; // 내용
-
     @Setter
     private String hashtag; // 해시태그
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OrderBy("id")
+    private final Set<ArticleComment> articleComments = new LinkedHashSet<>();
 
     @CreatedDate
     @Column(nullable = false)
