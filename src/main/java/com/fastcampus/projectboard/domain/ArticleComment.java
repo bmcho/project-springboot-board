@@ -16,8 +16,8 @@ import java.util.Objects;
 @ToString
 @Table(indexes = {
         @Index(columnList = "content"),
-        @Index(columnList = "hashtag"),
-        @Index(columnList = "createBy"),
+        @Index(columnList = "createdAt"),
+        @Index(columnList = "createdBy")
 })
 @Entity
 public class ArticleComment {
@@ -33,10 +33,10 @@ public class ArticleComment {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createAt; // 생성일시
+    private LocalDateTime createdAt; // 생성일시
     @CreatedBy
     @Column(nullable = false, length = 100)
-    private String createBy; // 생성자
+    private String createdBy; // 생성자
     @LastModifiedDate
     @Column(nullable = false)
     private LocalDateTime modifiedAt; // 수정일시
