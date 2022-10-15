@@ -1,0 +1,68 @@
+package com.fastcampus.projectboard.service;
+
+import com.fastcampus.projectboard.domain.Article;
+import com.fastcampus.projectboard.domain.ArticleComment;
+import com.fastcampus.projectboard.domain.UserAccount;
+import com.fastcampus.projectboard.dto.ArticleCommentDto;
+import com.fastcampus.projectboard.repository.ArticleCommentRepository;
+import com.fastcampus.projectboard.repository.ArticleRepository;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
+@DisplayName("비즈니스 로직 - 댓글")
+@ExtendWith(MockitoExtension.class)
+class ArticleCommentServiceTest {
+
+    @InjectMocks
+    private ArticleCommentService sut;
+    @Mock
+    private ArticleRepository articleRepository;
+    @Mock
+    private ArticleCommentRepository articleCommentRepository;
+
+
+    @DisplayName("댓글 조회 - 게시글ID 입력 시 해당 댓글 조회")
+    @Test
+    void givenArticleId_whenSearchComments_thenReturnComments() {
+        //given
+        Long articleId = 1L;
+        UserAccount userAccount = UserAccount.of("test", "test", "test", "test", "test");
+        given(articleRepository.findById(articleId)).willReturn(
+                Optional.of(Article.of(
+                        userAccount, "test", "test", "test"
+                ))
+        );
+
+        //when
+        List<ArticleCommentDto> articleComments = sut.searchArticleComment();
+
+        //then
+        assertThat(articleComments).isNotNull();
+    }
+
+    @DisplayName("댓글 정보를 입력하면, 댓글을 저장한다.")
+    @Test
+    void givenArticleCommentInfo_whenSavingArticleComment_thenSavesArticleComment() {
+        // Given
+        given(articleCommentRepository.save(any(ArticleComment.class))).willReturn(null);
+
+        // When
+        sut.saveArticleComment(ArticleCommentDto.of(LocalDateTime.now(), "Uno", LocalDateTime.now(), "Uno", "comment"));
+
+        // Then
+        then(articleCommentRepository).should().save(any(ArticleComment.class));
+    }
+}
