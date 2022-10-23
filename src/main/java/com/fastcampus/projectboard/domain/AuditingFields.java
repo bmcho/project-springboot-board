@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @ToString
-@MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@MappedSuperclass
 public abstract class AuditingFields {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
