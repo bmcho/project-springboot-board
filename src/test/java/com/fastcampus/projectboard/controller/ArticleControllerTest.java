@@ -95,12 +95,14 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(pageable.getPageNumber(), Page.empty().getTotalPages());
     }
 
-    @DisplayName("[view][GET] 게시글 상세페이지 - 정상호출")
+    @DisplayName("[view][GET] 게시글 페이지 - 정상호출")
     @Test
     public void given_whenRequestingArticleView_thenReturnsArticleView() throws Exception {
         //given
-        Long articleId = 1L;
+        long articleId = 1L;
+        long totalCount = 1L;
         given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+        given(articleService.getArticleCount()).willReturn(totalCount);
 
         //when & then
         mockMvc.perform(get("/articles/" + articleId))
@@ -108,9 +110,12 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
-                .andExpect(model().attributeExists("articleComments"));
+                .andExpect(model().attributeExists("articleComments"))
+                .andExpect(model().attributeExists("totalCount"));
+
 
         then(articleService).should().getArticle(articleId);
+        then(articleService).should().getArticleCount();
     }
 
     @Disabled

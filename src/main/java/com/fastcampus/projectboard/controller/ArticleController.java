@@ -50,6 +50,7 @@ public class ArticleController {
 
         map.addAttribute("article", response);
         map.addAttribute("articleComments", response.articleCommentsResponses());
+        map.addAttribute("totalCount", articleService.getArticleCount());
 
         return "articles/detail";
     }
